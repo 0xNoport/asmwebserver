@@ -12,6 +12,7 @@ _start:
 	jmp doItNow
 .global doItNow
 doItNow:
+	# print hello, just because i like it
 	mov rax,0x1
 	mov rdi,0x1
 	lea rsi,[rip+my_string]
@@ -25,30 +26,33 @@ doItNow:
 	mov rdx,0
 	syscall
 
-	# clearing registers to be sure that they are empty
-	xor r11, r11
-	xor r12, r12
-
+	# Write into the .bss variable (store the fd)
 	lea r11, [rip + sock_fd]
-
 	mov QWORD ptr [r11], rax     # Store the socket file descriptor
 
+	# socket addr structure
 	lea r12, [rip + sock_addr]
 
+	# sin_family (= AF_INET)
 	mov WORD ptr [r12], 2
 
+	# sin_port (= 8080)
 	mov WORD ptr [r12+2], 8080
 
+	# sin_addr (ipv4, default address)
 	mov QWORD ptr [r12+4], 0
 
 	# bind the socket
 	mov rax,0x31
 	mov rdi, [r11]
+	# rsi takes a pointer to a struct of type sock_addr (const struct sock_addr *addr)
+	# r12 is holding [rip+sock_addr]
 	mov rsi, r12
 	mov rdx, 16
 	xor r10, r10
 	syscall
 
+	# Exit with exit code 0
 	mov rax,0x3C
 	mov rdi,0x00
 	syscall
