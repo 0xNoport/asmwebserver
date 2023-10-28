@@ -42,7 +42,7 @@ doItNow:
 	mov WORD ptr [r12], 2
 
 	# sin_port (= 8080)
-	mov WORD ptr [r12+2], 8080
+	mov WORD ptr [r12+2], 0x901F
 
 	# sin_addr (ipv4, default address)
 	mov QWORD ptr [r12+4], 0
@@ -63,6 +63,18 @@ doItNow:
 	mov rdi, [rip + sock_fd]
 	mov rsi, 2
 	syscall
+
+	# Accept syscall
+    mov rax, 0x2B
+    mov rdi, [rip + sock_fd]
+    mov rsi, 0x00
+    mov rdx, 0x00
+    syscall
+
+    # Close accepted sockets
+    mov rax, 0x3
+    mov rdi, rax
+    syscall
 
 	# Exit with exit code 0
 	mov rax,0x3C
