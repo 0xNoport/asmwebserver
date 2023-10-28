@@ -6,6 +6,10 @@
 .section .data
 my_string:
 	.ascii "hallo:)"
+drei:
+	.ascii "drei\n"
+nichtdrei:
+	.ascii "nichtdrei\n"
 .section .text
 .global _start
 _start:
@@ -16,7 +20,7 @@ doItNow:
 	mov rax,0x1
 	mov rdi,0x1
 	lea rsi,[rip+my_string]
-	mov rdx,0x8
+	mov rdx,0x7
 	syscall
 
 	# create a new socket
@@ -29,6 +33,7 @@ doItNow:
 	# Write into the .bss variable (store the fd)
 	lea r11, [rip + sock_fd]
 	mov QWORD ptr [r11], rax     # Store the socket file descriptor
+	push rax
 
 	# socket addr structure
 	lea r12, [rip + sock_addr]
@@ -44,12 +49,19 @@ doItNow:
 
 	# bind the socket
 	mov rax,0x31
-	mov rdi, [r11]
+	mov rdi, [rip + sock_fd]
+	
 	# rsi takes a pointer to a struct of type sock_addr (const struct sock_addr *addr)
 	# r12 is holding [rip+sock_addr]
 	mov rsi, r12
 	mov rdx, 16
 	xor r10, r10
+	syscall
+
+	# listen syscall
+	mov rax, 0x32
+	mov rdi, [rip + sock_fd]
+	mov rsi, 2
 	syscall
 
 	# Exit with exit code 0
