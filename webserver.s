@@ -35,19 +35,16 @@ doItNow:
 
 	lea r12, [rip + sock_addr]
 
-	lea r8, [r12 + 0]
-	mov word ptr [r8], 2
+	mov WORD ptr [r12], 2
 
-	lea r8, [r12 + 2]
-	mov word ptr [r8], 8080
+	mov WORD ptr [r12+2], 8080
 
-	lea r8, [r12 + 4]
-	mov dword ptr [r8], 0
+	mov QWORD ptr [r12+4], 0
 
 	# bind the socket
 	mov rax,0x31
 	mov rdi, [r11]
-	mov rsi, [r12]
+	mov rsi, r12
 	mov rdx, 16
 	xor r10, r10
 	syscall
