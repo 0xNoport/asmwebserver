@@ -1,7 +1,8 @@
 
 .intel_syntax noprefix
 .section .bss
-	.lcomm sock,24    # Reserve space for the sockaddr structure
+	.lcomm sock_fd,8
+	.lcomm sock_addr,16    # Reserve space for the sockaddr structure
 .section .data
 my_string:
 	.ascii "hallo:)"
@@ -24,16 +25,29 @@ doItNow:
 	mov rdx,0
 	syscall
 
-	mov QWORD ptr [sock], rax     # Store the socket file descriptor
+	# clearing registers to be sure that they are empty
+	xor r11, r11
+	xor r12, r12
 
-	mov word ptr [sock+8], 2
-	mov word ptr [sock+10], 8080
-	mov dword ptr [sock+12], 0
+	lea r11, [rip + sock_fd]
+
+	mov QWORD ptr [r11], rax     # Store the socket file descriptor
+
+	lea r12, [rip + sock_addr]
+
+	lea r8, [r12 + 0]
+	mov word ptr [r8], 2
+
+	lea r8, [r12 + 2]
+	mov word ptr [r8], 8080
+
+	lea r8, [r12 + 4]
+	mov dword ptr [r8], 0
 
 	# bind the socket
 	mov rax,0x31
-	mov rdi, QWORD [sock]
-	mov rsi, qword [sock+8]
+	mov rdi, [r11]
+	mov rsi, [r12]
 	mov rdx, 16
 	xor r10, r10
 	syscall
