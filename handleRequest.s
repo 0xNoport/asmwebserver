@@ -24,6 +24,7 @@ jmp analyzeAndProcessRequest
 analyzeAndProcessRequest:
 # GET / POST / HEAD
 
+# -----------------------------------------------------
 # short break, i will try to read index.html and give it back
 mov rax,0x2
 lea rdi,[rip + default_webpage_filename]
@@ -41,7 +42,7 @@ syscall
 mov rax,0x3
 mov rdi,r8
 syscall
-
+# -----------------------------------------------------
 
 jmp answerRequest
 
