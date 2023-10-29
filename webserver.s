@@ -105,4 +105,3 @@ doItNow:
 	mov rax,0x3C
 	mov rdi,0x00
 	syscall
-	awdawd
