@@ -1,4 +1,5 @@
 
+.include "handleRequest.s"
 .intel_syntax noprefix
 .section .bss
 	.lcomm sock_fd,8
