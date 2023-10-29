@@ -43,8 +43,8 @@ doItNow:
 	# sin_family (= AF_INET)
 	mov WORD ptr [r12], 2
 
-	# sin_port (= 8080)
-	mov WORD ptr [r12+2], 0x901F
+	# sin_port (= 80)
+	mov WORD ptr [r12+2], 0x0050
 
 	# sin_addr (ipv4, default address)
 	mov QWORD ptr [r12+4], 0
@@ -84,13 +84,10 @@ doItNow:
 	mov rdx, 254
 	syscall
 
-	# write to stdout
-	mov rax, 1
-	mov rdi, 1
-	lea rsi, [rip + read_content]
-	mov rdx, 254
-	syscall
+	# Analyze the request and answer (handleRequest.s)
+	jmp handleRequest
 
+close_client_socket:
 	# Close client sockets
 	mov rdi, [rip + client_sock_fd]
 	mov rax, 0x3

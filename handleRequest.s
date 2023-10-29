@@ -4,6 +4,14 @@
 .section .text
 .global handleRequest
 handleRequest:
-	mov rax,1
+	# write to stdout
+	mov rax, 1
+	mov rdi, 1
+	lea rsi, [rip + read_content]
+	mov rdx, 254
+	syscall
+
+	jmp close_client_socket
+
 .section .ro
 .section .data
