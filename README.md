@@ -8,7 +8,6 @@
 
 ```
 gcc -nostdlib -static webserver.s -o webserver
-
 ./webserver
 ```
 
