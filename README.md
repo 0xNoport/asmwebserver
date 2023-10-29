@@ -1,4 +1,4 @@
-# Not [yet] working basic webserver in assembly
+# Basic webserver in assembly
 
 <br>
 
