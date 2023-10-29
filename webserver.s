@@ -35,7 +35,6 @@ doItNow:
 	# Write into the .bss variable (store the fd)
 	lea r11, [rip + sock_fd]
 	mov QWORD ptr [r11], rax     # Store the socket file descriptor
-	push rax
 
 	# socket addr structure
 	lea r12, [rip + sock_addr]
