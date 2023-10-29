@@ -5,10 +5,10 @@
 	.lcomm sock_fd,8
 	.lcomm sock_addr,16    # Reserve space for the sockaddr structure
 	.lcomm client_sock_fd,8
-	.lcomm read_content,255
+	.lcomm read_content, 4000 # 4KB space for request
 .section .data
-my_string:
-	.ascii "hallo:)"
+intro_message:
+	.ascii "Webserver started on port 80...\n\n"
 drei:
 	.ascii "drei\n"
 nichtdrei:
@@ -22,8 +22,8 @@ doItNow:
 	# print hello, just because i like it
 	mov rax,0x1
 	mov rdi,0x1
-	lea rsi,[rip+my_string]
-	mov rdx,0x7
+	lea rsi,[rip+intro_message]
+	mov rdx,33
 	syscall
 
 	# create a new socket
@@ -44,7 +44,7 @@ doItNow:
 	mov WORD ptr [r12], 2
 
 	# sin_port (= 80)
-	mov WORD ptr [r12+2], 0x0050
+	mov WORD ptr [r12+2], 20480
 
 	# sin_addr (ipv4, default address)
 	mov QWORD ptr [r12+4], 0
@@ -81,11 +81,11 @@ doItNow:
 	mov rax, 0
 	mov rdi, [rip + client_sock_fd]
 	lea rsi, [rip + read_content]
-	mov rdx, 254
+	mov rdx, 4000 # read 4 kb 
 	syscall
 
 	# Analyze the request and answer (handleRequest.s)
-	jmp handleRequest
+	jmp readRequest
 
 close_client_socket:
 	# Close client sockets
