@@ -3,6 +3,8 @@
 .section .bss
 	.lcomm sock_fd,8
 	.lcomm sock_addr,16    # Reserve space for the sockaddr structure
+	.lcomm client_sock_fd,8
+	.lcomm read_content,255
 .section .data
 my_string:
 	.ascii "hallo:)"
@@ -71,9 +73,32 @@ doItNow:
     mov rdx, 0x00
     syscall
 
-    # Close accepted sockets
+    # Store client's file descriptor
+    lea r8, [rip + client_sock_fd]
+    mov QWORD PTR [r8], rax
+
+    # read in from the client and store in read_content
+    mov rax, 0
+    mov rdi, [rip + client_sock_fd]
+    lea rsi, [rip + read_content]
+    mov rdx, 254
+    syscall
+
+    # write to stdout
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rip + read_content]
+    mov rdx, 254
+    syscall
+
+    # Close client sockets
+    mov rdi, [rip + client_sock_fd]
     mov rax, 0x3
-    mov rdi, rax
+    syscall
+
+    # Close server sockets
+    mov rax, 0x3
+    mov rdi, [rip + sock_fd]
     syscall
 
 	# Exit with exit code 0
