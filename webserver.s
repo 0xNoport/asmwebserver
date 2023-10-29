@@ -52,7 +52,7 @@ doItNow:
 	# bind the socket
 	mov rax,0x31
 	mov rdi, [rip + sock_fd]
-	
+
 	# rsi takes a pointer to a struct of type sock_addr (const struct sock_addr *addr)
 	# r12 is holding [rip+sock_addr]
 	mov rsi, r12
@@ -67,39 +67,39 @@ doItNow:
 	syscall
 
 	# Accept syscall
-    mov rax, 0x2B
-    mov rdi, [rip + sock_fd]
-    mov rsi, 0x00
-    mov rdx, 0x00
-    syscall
+	mov rax, 0x2B
+	mov rdi, [rip + sock_fd]
+	mov rsi, 0x00
+	mov rdx, 0x00
+	syscall
 
-    # Store client's file descriptor
-    lea r8, [rip + client_sock_fd]
-    mov QWORD PTR [r8], rax
+	# Store client's file descriptor
+	lea r8, [rip + client_sock_fd]
+	mov QWORD PTR [r8], rax
 
-    # read in from the client and store in read_content
-    mov rax, 0
-    mov rdi, [rip + client_sock_fd]
-    lea rsi, [rip + read_content]
-    mov rdx, 254
-    syscall
+	# read in from the client and store in read_content
+	mov rax, 0
+	mov rdi, [rip + client_sock_fd]
+	lea rsi, [rip + read_content]
+	mov rdx, 254
+	syscall
 
-    # write to stdout
-    mov rax, 1
-    mov rdi, 1
-    lea rsi, [rip + read_content]
-    mov rdx, 254
-    syscall
+	# write to stdout
+	mov rax, 1
+	mov rdi, 1
+	lea rsi, [rip + read_content]
+	mov rdx, 254
+	syscall
 
-    # Close client sockets
-    mov rdi, [rip + client_sock_fd]
-    mov rax, 0x3
-    syscall
+	# Close client sockets
+	mov rdi, [rip + client_sock_fd]
+	mov rax, 0x3
+	syscall
 
-    # Close server sockets
-    mov rax, 0x3
-    mov rdi, [rip + sock_fd]
-    syscall
+	# Close server sockets
+	mov rax, 0x3
+	mov rdi, [rip + sock_fd]
+	syscall
 
 	# Exit with exit code 0
 	mov rax,0x3C
