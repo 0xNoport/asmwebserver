@@ -23,9 +23,10 @@ _start:
 	jmp exit
 .global replace
 replace:
-	mov rax, 2 # open
-	lea rdi, [rip + filename]
-	syscall # fd in rax
+	pop rcx # contains the return address that is now on the top of the stack after calling this function
+	mov rax, [rsp]
+	mov rdx, [rsp + 8] # first argument # 8 => 8 bits, 1 byte = 1 arg
+	push rcx # push the return address on the stack again
 
 	mov rdi, rax # save fd
 	mov rax, 0 # read
