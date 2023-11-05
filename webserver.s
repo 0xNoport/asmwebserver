@@ -7,8 +7,10 @@
 	.lcomm client_sock_fd,8
 	.lcomm read_content, 4000 # 4KB space for request
 .section .data
+author_message:
+	.ascii "\nCreated by 44h\n\___________________________________________________________________________\n\___________________________________________________________________________\n                   _____              _____                   \n                  /    /             /    /                   \n                 /    /             /    /        .           \n                /    /             /    /       .'|           \n               /    /             /    /       <  |           \n              /    /  __         /    /  __     | |           \n             /    /  |  |       /    /  |  |    | | .'''-.    \n            /    '   |  |      /    '   |  |    | |/.'''. \\   \n           /    '----|  |---. /    '----|  |---.|  /    | |   \n          /          |  |   |/          |  |   || |     | |   \n          '----------|  |---''----------|  |---'| |     | |   \n                     |  |               |  |    | '.    | '.  \n                    /____\\             /____\\   '---'   '---'\n\___________________________________________________________________________\n\___________________________________________________________________________\n\n\n"
 intro_message:
-	.ascii "Webserver started on port 80...\n\n"
+	.ascii "[x] Webserver started on port 80...\n\n"
 drei:
 	.ascii "drei\n"
 nichtdrei:
@@ -19,11 +21,19 @@ _start:
 	jmp doItNow
 .global doItNow
 doItNow:
-	# print hello, just because i like it
+	
+	# print authors signature
+	mov rax,0x1
+	mov rdi,0x1
+	lea rsi,[rip + author_message]
+	mov rdx,1140
+	syscall
+
+	# print Welcome message
 	mov rax,0x1
 	mov rdi,0x1
 	lea rsi,[rip+intro_message]
-	mov rdx,33
+	mov rdx,37
 	syscall
 
 	# create a new socket
