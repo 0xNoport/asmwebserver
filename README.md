@@ -12,4 +12,4 @@ gcc -nostdlib -static webserver.s -o webserver
 
 <br>
 
-This project is still in development. 
+This project is still under development. 
